@@ -1,0 +1,65 @@
+SELECT * FROM INHABITANT;
+Primero uso SELECT * FROM INHABITANT para ver todos los personajes del juego.
+
+SELECT * FROM INHABITANT WHERE state = "friendly";
+Después uso WHERE state = "friendly" para ver solo los personajes que son amigables.
+
+SELECT * FROM INHABITANT WHERE state LIKE "FRIENDLY";
+También uso LIKE "FRIENDLY" para buscar personajes cuyo estado sea friendly.
+
+SELECT * FROM INHABITANT WHERE state LIKE "FRIENDLY" AND job = "weaponsmith";
+Luego uso AND para buscar personajes que sean amigables y además herreros de armas.
+
+SELECT * FROM INHABITANT WHERE job LIKE "%smith" AND state LIKE "FRIENDLY";
+Después uso %smith para encontrar trabajos que terminan en "smith".
+
+SELECT personid FROM INHABITANT WHERE name LIKE "Stranger";
+Luego uso esto para encontrar el ID del personaje llamado Stranger.
+
+SELECT gold FROM INHABITANT WHERE name LIKE "Stranger";
+Después uso esto para ver cuánto oro tiene ese personaje.
+
+SELECT * FROM ITEM WHERE owner IS NULL;
+Luego uso esto para ver los objetos que no tienen dueño.
+
+UPDATE item SET owner = 20 WHERE owner IS NULL;
+Por último uso esto para asignar los objetos sin dueño al personaje con ID 20.
+
+SELECT * FROM INHABITANT WHERE STATE = "friendly" and job = "dealer" or job = "merchant";
+Esta consulta muestra los personajes amigables que trabajan como dealer o merchant.
+
+UPDATE item SET OWNER = 15 WHERE ITEM = "ring" OR ITEM = "teapot";
+Con esta consulta asigno el ring y el teapot al personaje con ID 15.
+
+UPDATE INHABITANT SET name = "Axel" WHERE name like "stranger";
+Aquí cambio el nombre Stranger por Axel.
+
+SELECT * FROM inhabitant WHERE JOB = "baker" ORDER BY gold DESC;
+Esta consulta muestra los bakers ordenados desde el que tiene más oro hasta el que tiene menos.
+
+SELECT * FROM inhabitant WHERE JOB = "pilot";
+Aquí muestro todos los personajes cuyo trabajo es pilot.
+
+SELECT inhabitant.name FROM village, inhabitant WHERE village.chief = inhabitant.personid AND village.name = "Onionville";
+Esta consulta muestra el nombre del jefe de Onionville.
+
+SELECT COUNT(*) FROM inhabitant JOIN village ON village.villageid = inhabitant.villageid WHERE village.name = "Onionville" AND inhabitant.gender = "f";
+Aquí cuento cuántas mujeres viven en Onionville.
+
+SELECT inhabitant.name FROM inhabitant JOIN village ON village.villageid = inhabitant.villageid WHERE village.name = "Onionville" AND inhabitant.gender = "f";
+Esta consulta muestra los nombres de las mujeres que viven en Onionville.
+
+SELECT SUM(inhabitant.gold) FROM inhabitant WHERE inhabitant.job IN ('baker','dealer','merchant');
+Aquí sumo todo el oro de los bakers, dealers y merchants.
+
+SELECT job, SUM(inhabitant.gold), AVG(inhabitant.gold) FROM inhabitant GROUP BY job ORDER BY AVG(inhabitant.gold);
+Esta consulta muestra la suma y el promedio de oro agrupados por trabajo.
+
+SELECT state, AVG(inhabitant.gold) FROM inhabitant GROUP BY state ORDER BY AVG(inhabitant.gold);
+Aquí calculo el promedio de oro según el estado de los personajes.
+
+DELETE FROM inhabitant WHERE name = 'Dirty Diane';
+Con esta consulta elimino al personaje llamado Dirty Diane.
+
+UPDATE inhabitant SET state = 'friendly' WHERE state = 'kidnapped';
+Por último cambio el estado de todos los personajes secuestrados a friendly.

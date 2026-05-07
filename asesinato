@@ -1,0 +1,133 @@
+1
+SELECT * 
+FROM crime_scene_report;
+
+Primero miro todos los reportes de crímenes para ver qué información hay.
+-
+2
+SELECT *
+FROM crime_scene_report
+WHERE type = "murder"
+	AND date = "20180115"
+	AND city = "SQL City";
+
+Después filtro para encontrar el asesinato que pasó el 15 de enero de 2018 en SQL City.
+-
+3
+SELECT *
+FROM crime_scene_report
+WHERE type = "murder"
+	AND date = "20180115"
+	AND city = "SQL City";
+Lo vuelvo a hacer para asegurarme de entender bien lo que pasó en el crimen.
+-
+4
+SELECT *
+FROM person;
+
+Miro todas las personas para ver qué datos tiene la tabla.
+-
+5
+SELECT *
+FROM person
+WHERE address_street_name = "Northwestern Dr"
+ORDER BY address_number DESC;
+
+Busco las personas que viven en esa calle porque el testigo dijo eso.
+-
+6
+SELECT *
+FROM interview
+WHERE person_id IN ("14887", "16371");
+
+Leo las entrevistas de esas personas para encontrar pistas.
+
+-
+7
+SELECT *
+FROM get_fit_now_check_in
+WHERE membership_id LIKE '48Z%'
+	AND check_in_date = "20180109";
+
+Leo las entrevistas de esas personas para encontrar pistas.
+-
+8
+SELECT *
+FROM drivers_license
+WHERE gender = "male"
+	AND plate_number LIKE '%H42W%';
+
+Busco en el gimnasio porque dijeron que el sospechoso iba ahí.
+-
+9
+SELECT *
+FROM person
+WHERE license_id IN ("423327", "664760");
+
+Veo quiénes son esas personas con esas licencias.
+-
+10
+SELECT *
+FROM get_fit_now_member
+WHERE person_id IN ("51739", "67318");
+-
+11
+INSERT INTO solution VALUES (1, 'Jeremy Bowers'); 
+SELECT value FROM solution;
+
+Descubro que el asesino es Jeremy Bowers.
+-
+12
+SELECT *
+FROM interview
+WHERE person_id = "67318";
+
+Leo su entrevista para ver si alguien más está involucrado.
+-
+13
+SELECT *
+FROM drivers_license
+WHERE gender = "female"
+	AND hair_color = "red"
+	AND height BETWEEN 65 AND 67
+	AND car_make = "Tesla"
+	AND car_model = "Model S";
+
+Busco a la mujer que coincide con la descripción que dio el asesino.
+-               
+14
+            
+SELECT *
+FROM person
+WHERE license_id IN ("202298", "291182", "918773");
+
+Veo los nombres de esas mujeres.
+-
+15
+SELECT 
+	person_id, 
+    event_name, 
+    COUNT(*) AS event_count
+FROM facebook_event_checkin
+WHERE person_id IN ("78881", "90700", "99716")
+GROUP BY person_id, event_name;
+
+Miro a qué eventos fueron para ver quién coincide con la pista del concierto.
+-
+16
+SELECT 
+	person_id, 
+    event_name, 
+    COUNT(*) AS event_count
+FROM facebook_event_checkin
+WHERE person_id IN ("78881", "90700", "99716")
+GROUP BY person_id, event_name;
+
+Confirmo quién fue varias veces al concierto.
+-
+17
+INSERT INTO solution VALUES (1, 'Miranda Priestly');
+SELECT value FROM solution;
+
+Al final descubro que la jefa de todo es Miranda Priestly.
+              
