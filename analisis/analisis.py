@@ -1,54 +1,146 @@
-# Importa pandas
+# Importar librerías
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Lee el archivo CSV
+# Leer archivo CSV
 df = pd.read_csv("Indian_Student_AI_Dataset.csv")
 
-# Mensaje de carga
-print("okey! Archivo cargado correctamente")
+# --------------------------------------------
+# CARGA Y EXPLORACIÓN DE DATOS
+# --------------------------------------------
 
-# Muestra primeras filas
+print("¡Archivo cargado correctamente!\n")
+
+# Mostrar primeras filas
 print(df.head())
 
-# Obtiene filas y columnas
+# Obtener filas y columnas
 filas, columnas = df.shape
 
-# Muestra tamaño del dataframe
-print(f"El dataframe tiene {filas} filas y {columnas} columnas")
+# Mostrar tamaño del DataFrame
+print(f"\nEl DataFrame tiene {filas} filas y {columnas} columnas")
 
-# Titulo del analisis
-print("---Analisis Avansado de Datos---")
+# Título del análisis
+print("\n--- ANÁLISIS AVANZADO DE DATOS ---")
 
-# Filtra lenguajes que empiezan con C+
-filtro_avanzado = df['preferred_programming_language'].str.startswith('C+', na=False)
+# --------------------------------------------
+# FILTRO DE DATOS
+# --------------------------------------------
 
-# Guarda datos filtrados
-df_filtrado = df[filtro_avanzado]
+# Filtrar lenguajes que comienzan con C+
+filtro = df["preferred_programming_language"].str.startswith("C+", na=False)
 
-# Cuenta registros filtrados
-total_registros = df_filtrado['preferred_programming_language'].count()
+# Guardar datos filtrados
+df_filtrado = df[filtro]
 
-# Muestra cantidad
-print(f"Cantidad de envios de tecnologia 'advance' {total_registros}")
+# Contar registros filtrados
+total_registros = df_filtrado["preferred_programming_language"].count()
 
-# Suma valores de bienestar mental
-suma_dinero = df_filtrado['mental_wellbeing_score'].sum()
+# Mostrar cantidad
+print(f"Cantidad de estudiantes que utilizan C+: {total_registros}")
 
-# Muestra suma total
-print(f"valor total de este comercio: USD {suma_dinero:.2f} millions")
+# Sumar valores de bienestar mental
+suma_bienestar = df_filtrado["mental_wellbeing_score"].sum()
 
+# Mostrar suma
+print(f"Suma total de bienestar mental: {suma_bienestar:.2f}")
 
-# Verifica si el valor es muy alto
-if suma_dinero > 500:
-    print("Alerta: El volumen de mercado es critico")
-    print("Requiere revision inmediata")
+# --------------------------------------------
+# ANÁLISIS CONDICIONAL
+# --------------------------------------------
 
-# Verifica si el valor es moderado
-elif suma_dinero > 200:
-    print("Aviso: volumen mercado moderado/alto")
-    print("Monitorear comportamiento proximo trimestre")
-
-# Caso contrario
+if suma_bienestar > 500:
+    print("\nAlerta: nivel de bienestar acumulado muy alto")
+    print("Se recomienda revisar los resultados.")
+elif suma_bienestar > 200:
+    print("\nAviso: nivel de bienestar acumulado moderado")
+    print("Continuar monitoreando los datos.")
 else:
-    print("Estado: volumen de mercado bajo")
-    print("No se requiere accion profesional")
+    print("\nEstado: nivel de bienestar acumulado bajo")
+    print("No se requiere acción inmediata.")
+
+# --------------------------------------------
+# GRÁFICO DE BARRAS
+# --------------------------------------------
+
+print("\nGenerando gráfico de barras...")
+
+sns.set_theme(style="whitegrid")
+
+datos_barras = (
+    df.groupby("preferred_programming_language")["mental_wellbeing_score"]
+      .sum()
+      .sort_values(ascending=False)
+      .head(10)
+)
+
+plt.figure(figsize=(10, 5))
+
+sns.barplot(
+    x=datos_barras.index,
+    y=datos_barras.values,
+    palette="Blues_d"
+)
+
+plt.title(
+    "Bienestar mental por lenguaje de programación",
+    fontsize=14
+)
+
+plt.xlabel(
+    "Lenguaje de programación",
+    fontsize=11
+)
+
+plt.ylabel(
+    "Total de mental_wellbeing_score",
+    fontsize=11
+)
+
+plt.xticks(rotation=40)
+
+plt.tight_layout()
+plt.savefig("grafico_barras.png", dpi=300)
+plt.close()
+
+print("Gráfico de barras guardado exitosamente.")
+
+# --------------------------------------------
+# GRÁFICO DE TORTA
+# --------------------------------------------
+
+print("\nGenerando gráfico de torta...")
+
+datos_torta = (
+    df.groupby("preferred_programming_language")["mental_wellbeing_score"]
+      .sum()
+      .nlargest(5)
+)
+
+plt.figure(figsize=(7, 7))
+
+plt.pie(
+    datos_torta,
+    labels=datos_torta.index,
+    autopct="%1.1f%%",
+    colors=sns.color_palette("Set2")[0:5],
+    startangle=140,
+    wedgeprops={
+        "edgecolor": "white",
+        "linewidth": 2
+    }
+)
+
+plt.title("Distribución del bienestar mental por lenguaje")
+
+plt.savefig("grafico_torta.png", dpi=300)
+plt.close()
+
+print("Gráfico de torta guardado exitosamente.")
+
+# --------------------------------------------
+# FIN DEL PROGRAMA
+# --------------------------------------------
+
+print("\nAnálisis finalizado correctamente.")
