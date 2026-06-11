@@ -1,0 +1,148 @@
+# Importamos las librerías necesarias
+import pandas as pd
+import matplotlib
+matplotlib.use("Agg")  # Evita ventanas flotantes en Linux
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# =====================================================
+# CARGA DEL ARCHIVO CSV
+# =====================================================
+
+df = pd.read_csv("Indian_Student_AI_Dataset.csv")
+
+# =====================================================
+# PUNTO 1 - Cantidad de filas y columnas
+# =====================================================
+
+filas, columnas = df.shape
+
+print(f"\nLa tabla contiene {filas} filas y {columnas} columnas\n")
+
+# =====================================================
+# PUNTO 2 - Filtro por coincidencia exacta
+# =====================================================
+
+filtro_avanzado = (
+    df["COLUMNA_CATEGORIA"] == "VALOR_EXACTO"
+)
+
+df_filtrado_exacto = df[filtro_avanzado]
+
+print("Filtro por coincidencia exacta:")
+print(df_filtrado_exacto.head())
+print()
+
+# =====================================================
+# PUNTO 3 - Filtro por texto parcial
+# =====================================================
+
+df_filtrado_parcial = df[
+    df["COLUMNA_CATEGORIA"]
+    .astype(str)
+    .str.contains("TEXTO_CLAVE", case=False, na=False)
+]
+
+print("Filtro por texto parcial:")
+print(df_filtrado_parcial.head())
+print()
+
+# =====================================================
+# PUNTO 4 - Selección de columnas clave
+# =====================================================
+
+columnas_clave = df_filtrado_parcial[
+    ["COLUMNA_CATEGORIA", "COLUMNA_NUMERICA"]
+]
+
+print("Columnas seleccionadas:")
+print(columnas_clave.head())
+print()
+
+# =====================================================
+# PUNTO 5 - Agrupación y resumen
+# =====================================================
+
+agrupado = (
+    df.groupby("COLUMNA_CATEGORIA")["COLUMNA_NUMERICA"]
+    .sum()
+    .sort_values(ascending=False)
+)
+
+print("Resumen agrupado:")
+print(agrupado)
+print()
+
+# =====================================================
+# PUNTO 6 - Estructura de control con operador morsa
+# =====================================================
+
+UMBRAL = 1000
+
+if (total := columnas_clave["COLUMNA_NUMERICA"].sum()) > UMBRAL:
+    print(f"ALERTA: Prioridad Alta - Total = {total}")
+else:
+    print(f"Estado Normal - Total = {total}")
+
+# =====================================================
+# PUNTO 7 - Gráfico de barras comparativo
+# =====================================================
+
+plt.figure(figsize=(12, 6))
+
+sns.barplot(
+    data=df,
+    x="COLUMNA_CATEGORIA",
+    y="COLUMNA_NUMERICA",
+    estimator=sum,
+    errorbar=None,
+    palette="viridis"
+)
+
+plt.title("Comparación por Categorías")
+plt.xlabel("Categoría")
+plt.ylabel("Total")
+plt.xticks(rotation=45)
+
+plt.tight_layout()
+
+plt.savefig(
+    "reporte_barras.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.close()
+
+# =====================================================
+# PUNTO 8 - Gráfico de torta puro
+# =====================================================
+
+top_categorias = agrupado.nlargest(5)
+
+plt.figure(figsize=(8, 8))
+
+plt.pie(
+    top_categorias,
+    labels=top_categorias.index,
+    autopct="%1.1f%%",
+    wedgeprops={
+        "edgecolor": "white",
+        "linewidth": 2
+    }
+)
+
+plt.title("Distribución de Categorías")
+
+plt.savefig(
+    "reporte_torta.png",
+    dpi=300,
+    bbox_inches="tight"
+)
+
+plt.close()
+
+print("\nReportes generados correctamente:")
+print("- reporte_barras.png")
+print("- reporte_torta.png")
